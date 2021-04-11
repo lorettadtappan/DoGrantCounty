@@ -1,0 +1,299 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - Events{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu now"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+        <div class="event-bar">
+            <div class="flex-box padding-side">
+                <div class="flex-2 flex-center text-left">
+                    <a href="{{ url_for('admin_event', year=controls.previous) }}"><button class="button-control" id="event-previous"><i class="fas fa-arrow-left"></i></button></a>
+                    <div class="year">{{ year }}</div>
+                    <a href="{{ url_for('admin_event', year=controls.next) }}"><button class="button-control" id="event-next"><i class="fas fa-arrow-right"></i></button></a></div>
+                <div class="flex-3 flex-center text-right desktop">
+                    <form method="POST" class="form-inline">
+                        {{ search.csrf_token }}
+                        {{ search.keyword(placeholder="Search...", class="search") }}
+                        {{ search.search_submit(class="hidden") }}
+                    </form>
+                    <form method="POST" class="form-inline">
+                        {{ category.csrf_token }}
+                        {{ category.category(class="sort", onchange="sort_event(this)") }}
+                        {{ category.category_submit(class="hidden") }}
+                    </form>
+                    <a href="{{ url_for('admin_new') }}"><button class="button-control right" id="event-add"><i class="fas fa-plus"></i></button></a>
+                </div>
+                <div class="flex flex-center text-right mobile"><div class="more" onclick="more()"><i id="arrow" class="fas fa-angle-down"></i></div></div>
+            </div>
+            <div id="more-mobile" class="flex-box mobile">
+                <div class="flex-3 flex-center text-right">
+                    <form method="POST" class="form-inline">
+                        {{ search.csrf_token }}
+                        {{ search.keyword(placeholder="Search...", class="search") }}
+                        {{ search.search_submit(class="hidden") }}
+                    </form>
+                </div>
+                <div class="flex-3 flex-center text-left">
+                    <form method="POST" class="form-inline">
+                        {{ category.csrf_token }}
+                        {{ category.category(class="sort", onchange="sort_event(this)") }}
+                        {{ category.category_submit(class="hidden") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('admin_new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('admin_events') }}"><div class="menu-mobile now"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('admin_categories') }}"><div class="menu-mobile"><i class="fas fa-th-large"></i> Categories</div></a>
+        <a href="{{ url_for('admin_questions') }}"><div class="menu-mobile"><i class="far fa-question-circle"></i> Questions</div></a>
+        <a href="{{ url_for('admin_settings') }}"><div class="menu-mobile"><i class="fas fa-cog"></i> Settings</div></a>
+        <div class="padding"></div>
+        <a href="{{ url_for('logout') }}"><div class="menu-mobile"><i class="fas fa-sign-out-alt"></i> Sign Out</div></a>
+    </div>
+
+
+    <div class="page has-event-bar max-width margin-center">
+
+        {% if pendings %}
+        <div class="section-title">New Events</div>
+        <div class="events">
+            {% for e in pendings %}
+            <div class="event" id="event-{{ e.id }}">
+                <div class="flex-box cursor-pointer" onclick="toggle_event('{{ e.id }}')">
+                    <div class="flex-3 flex-center text-left">
+                        <div class="title">{{ e.title }}</div>
+                        <div class="organization">{{ e.organization }}</div>
+                    </div>
+                    <div class="flex flex-center text-right">
+                        <div class="settings">
+                            <span onclick="accept_event('{{ e.id }}')"><i class="fas fa-check-circle"></i></span>
+                            <span onclick="delete_event('{{ e.id }}')"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="details flex-box-mobile" id="details-{{ e.id }}">
+                    <div class="flex-5 text-left padding">
+                        {% if e.photo != '' %}
+                            <div class="photo"><img alt="" src="/static/event-pics/{{ e.photo }}"></div>
+                        {% endif %}
+                        {% if e.cost != '0' and e.cost != '' %}
+                            <div class="cost">{{ e.cost }}</div>
+                        {% endif %}
+                        <div class="description">{{ e.description }}</div>
+                        <div class="description">Password: <b>{{ e.password }}</b></div>
+                    </div>
+                    <div class="flex-3 text-left padding">
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> <a class="link" target="_blank" href="https://maps.google.com/?q={{ e.location }}">{{ e.location }}</a></div>
+                        {% if e.start_date == e.end_date %}
+                            <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }}</div>
+                        {% else %}
+                            <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }} - {{ e.end_date }}</div>
+                        {% endif %}
+                        <div class="time mobile"><i class="far fa-clock"></i> {{ e.start_time }} - {{ e.end_time }}</div>
+                        <div class="phone"><i class="fas fa-user"></i> {{ e.contact_name }}</div>
+                        <div class="phone"><i class="fas fa-at"></i> <a class="link" href="mailto:{{ e.contact_email }}">{{ e.contact_email }}</a></div>
+                        {% if e.contact_phone != "" %}
+                            <div class="phone"><i class="fas fa-phone"></i> <a class="link" target="_blank" href="tel:{{ e.contact_phone }}">{{ e.contact_phone }}</a></div>
+                        {% endif %}
+                        {% if e.url != "" %}
+                            <div class="url"><i class="fas fa-globe"></i> <a class="link" target="_blank" href="//{{ e.url }}">{{ e.url }}</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if edits %}
+        <div class="section-title">Edited Events</div>
+        <div class="events">
+            {% for e in edits %}
+            <div class="event" id="event-{{ e.id }}">
+                <div class="flex-box cursor-pointer" onclick="toggle_event('{{ e.id }}')">
+                    <div class="flex-3 flex-center text-left">
+                        <div class="title">{{ e.title }}</div>
+                        <div class="organization">{{ e.organization }}</div>
+                    </div>
+                    <div class="flex flex-center text-right">
+                        <div class="settings">
+                            <a href="/admin/events/accept/edit/{{ e.id }}"><i class="fas fa-check-circle"></i></a>
+                            <span onclick="delete_edit('{{ e.id }}')"><i class="fas fa-times-circle"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="details flex-box-mobile" id="details-{{ e.id }}">
+                    <div class="flex-5 text-left padding">
+                        {% if e.photo != '' %}
+                            <div class="photo"><img alt="" src="/static/event-pics/{{ e.photo }}"></div>
+                        {% endif %}
+                        {% if e.cost != '0' and e.cost != '' %}
+                            <div class="cost">{{ e.cost }}</div>
+                        {% endif %}
+                        <div class="description">{{ e.description }}</div>
+                        <div class="description">Password: <b>{{ e.password }}</b></div>
+                    </div>
+                    <div class="flex-3 text-left padding">
+                        <div class="location"><i class="fas fa-map-marker-alt"></i> <a class="link" target="_blank" href="https://maps.google.com/?q={{ e.location }}">{{ e.location }}</a></div>
+                        {% if e.start_date == e.end_date %}
+                            <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }}</div>
+                        {% else %}
+                            <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }} - {{ e.end_date }}</div>
+                        {% endif %}
+                        <div class="time mobile"><i class="far fa-clock"></i> {{ e.start_time }} - {{ e.end_time }}</div>
+                        <div class="phone"><i class="fas fa-user"></i> {{ e.contact_name }}</div>
+                        <div class="phone"><i class="fas fa-at"></i> <a class="link" href="mailto:{{ e.contact_email }}">{{ e.contact_email }}</a></div>
+                        {% if e.contact_phone != "" %}
+                            <div class="phone"><i class="fas fa-phone"></i> <a class="link" target="_blank" href="tel:{{ e.contact_phone }}">{{ e.contact_phone }}</a></div>
+                        {% endif %}
+                        {% if e.url != "" %}
+                            <div class="url"><i class="fas fa-globe"></i> <a class="link" target="_blank" href="//{{ e.url }}">{{ e.url }}</a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="section-title">Events</div>
+        <div class="events">
+
+            {% for num in nums %}
+            <section>
+            <div class="section">{{ event_dates[num] }}</div>
+                {% for n in events[num] %}
+                    {% for e in events[num][n] %}
+                    <div class="event" id="event-{{ e.id }}">
+                        <div class="flex-box cursor-pointer" onclick="toggle_event('{{ e.id }}')">
+                            <div class="flex-3 flex-center text-left">
+                                <div class="title">{{ e.title }}</div>
+                                <div class="organization">{{ e.organization }}</div>
+                            </div>
+                            <div class="flex flex-center text-right">
+                                <div class="settings">
+                                    <a href="/admin/events/edit/{{ e.id }}"><i class="fas fa-pen-square"></i></a>
+                                    <span onclick="delete_event('{{ e.id }}')"><i class="fas fa-minus-square"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="details flex-box-mobile" id="details-{{ e.id }}">
+                            <div class="flex-5 text-left padding">
+                                {% if e.photo != '' %}
+                                    <div class="photo"><img alt="" src="/static/event-pics/{{ e.photo }}"></div>
+                                {% endif %}
+                                {% if e.cost != '0' and e.cost != '' %}
+                                    <div class="cost"><div class="cost-tag">COST</div>{{ e.cost }}</div>
+                                {% endif %}
+                                <div class="description">{{ e.description }}</div>
+                                <div class="description">Password: <b>{{ e.password }}</b></div>
+                            </div>
+                            <div class="flex-3 text-left padding">
+                                <div class="location"><i class="fas fa-map-marker-alt"></i> <a class="link" target="_blank" href="https://maps.google.com/?q={{ e.location }}">{{ e.location }}</a></div>
+                                {% if e.start_date == e.end_date %}
+                                    <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }}</div>
+                                {% else %}
+                                    <div class="date"><i class="far fa-calendar"></i> {{ e.start_date }} - {{ e.end_date }}</div>
+                                    <div class="repeat"><i class="fas fa-sync-alt"></i> {{ e.repeated }}</div>
+                                {% endif %}
+                                <div class="time mobile"><i class="far fa-clock"></i> {{ e.start_time }} - {{ e.end_time }}</div>
+                                <div class="phone"><i class="fas fa-user"></i> {{ e.contact_name }}</div>
+                                <div class="phone"><i class="far fa-envelope"></i> <a class="link" href="mailto:{{ e.contact_email }}">{{ e.contact_email }}</a></div>
+                                {% if e.contact_phone != "" %}
+                                    <div class="phone"><i class="fas fa-phone"></i> <a class="link" target="_blank" href="tel:{{ e.contact_phone }}">{{ e.contact_phone }}</a></div>
+                                {% endif %}
+                                {% if e.url != "" %}
+                                    <div class="url"><i class="fas fa-globe"></i> <a class="link" target="_blank" href="//{{ e.url }}">{{ e.url }}</a></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </section>
+            {% else %}
+            <div class="information">There is no event in this time period.</div>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+
+<script>
+
+var more_status = false;
+
+function sort_event(v) {
+    document.getElementById("category_submit").click();
+}
+
+function toggle_event(e) {
+    console.log(document.getElementById('details-'+e).style.height);
+
+    if (document.getElementById('details-'+e).style.height == 'auto') {
+        document.getElementById('details-'+e).style.height = '0';
+        document.getElementById('event-'+e).style.background = 'none';
+    } else {
+        var details = document.getElementsByClassName('details');
+        var events = document.getElementsByClassName('event');
+
+        for (var i = 0; i < details.length; i++) {
+            details[i].style.height = '0';
+            events[i].style.background = 'none';
+        }
+        document.getElementById('details-'+e).style.height = 'auto';
+        document.getElementById('event-'+e).style.background = '#f6f6f6';
+    }
+}
+
+function more() {
+    console.log(document.getElementById('more-mobile').style.height);
+    if (more_status) {
+        document.getElementById('more-mobile').style.height = '0';
+        document.getElementById('arrow').style.transform = 'rotate(0deg)';
+    } else {
+        document.getElementById('more-mobile').style.height = 'auto';
+        document.getElementById('arrow').style.transform = 'rotate(180deg)';
+    }
+    more_status = !more_status;
+}
+
+function accept_event(id) {
+    document.getElementById('event-'+id).innerHTML = '<div id="loading-div-show"><div class="loading"><div></div><div></div><div></div><div></div></div></div>';
+    window.location.href = '/admin/events/accept/'+id;
+}
+
+function delete_event(id) {
+    if (confirm('Would you like to remove this event from the website?')) {
+        window.location.href = '/admin/events/delete/'+id;
+    }
+}
+function delete_edit(id) {
+    if (confirm('Would you like to reject this change?')) {
+        window.location.href = '/admin/events/delete/edit/'+id;
+    }
+}
+
+</script>
+
+{% endblock %}

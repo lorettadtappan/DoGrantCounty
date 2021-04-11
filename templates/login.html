@@ -1,0 +1,39 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+
+    {% if form.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in form.errors %}
+                {% for error in form.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="page max-width margin-center">
+
+        <div class="login">
+            <div class="flex">
+                <img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg">
+            </div>
+            <div class="padding"></div>
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="flex">{{ form.password(placeholder="Password", class="form-login") }}</div>
+                <div class="flex">{{ form.submit(class="submit") }}</div>
+            </form>
+        </div>
+
+    </div>
+
+
+<script>
+
+</script>
+
+{% endblock %}

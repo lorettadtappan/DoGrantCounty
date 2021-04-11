@@ -1,0 +1,29 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Edit Event Result{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-3 flex-center logo-bar">
+                <img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg">
+            </div>
+            <div class="flex flex-center menu-bar">
+                <div class="menu"><a href="{{ url_for('user_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page max-width margin-center">
+
+        <h1><div>Edit Event</div></h1>
+        <div class="error-message">{{ message }}</div>
+    </div>
+
+
+<script>
+
+</script>
+
+{% endblock %}

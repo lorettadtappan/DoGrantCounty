@@ -1,0 +1,371 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - New Event{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu now"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('admin_new') }}"><div class="menu-mobile now"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('admin_events') }}"><div class="menu-mobile"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('admin_categories') }}"><div class="menu-mobile"><i class="fas fa-th-large"></i> Categories</div></a>
+        <a href="{{ url_for('admin_questions') }}"><div class="menu-mobile"><i class="far fa-question-circle"></i> Questions</div></a>
+        <a href="{{ url_for('admin_settings') }}"><div class="menu-mobile"><i class="fas fa-cog"></i> Settings</div></a>
+        <div class="padding"></div>
+        <a href="{{ url_for('logout') }}"><div class="menu-mobile"><i class="fas fa-sign-out-alt"></i> Sign Out</div></a>
+    </div>
+
+
+    {% if form.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in form.errors %}
+                {% for error in form.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="page max-width margin-center">
+
+        <div class="new">
+            <h1><div>New Event</div></h1>
+            <form method="POST" enctype="multipart/form-data">
+
+                {{ form.csrf_token }}
+                <div class="section">
+                    <div class="flex-box-mobile icon icon-category">
+                        <div class="flex">
+                            <i class="fas fa-th-large"></i>
+                            <div id="dropdown">
+                                <i id="drop" class="fas fa-chevron-down"></i>
+                                <div id="dropdown-selected" class="none">Category</div>
+                                <div id="dropdown-options">
+                                    {% for c in categories %}
+                                    <div class="dropdown-option" data-value="{{ c.id }}">{{ c.title }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            {{ form.category(class="hidden") }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex text-right-mobile"><i class="fas fa-magic"></i>{{ form.title(placeholder="Title", class="") }}</div>
+                        <div class="flex text-left-mobile"><i class="fas fa-users"></i>{{ form.organization(placeholder="Host (Organization)", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex"><i class="fas fa-align-left"></i>{{ form.description(placeholder="Description", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex"><i class="fas fa-map-marker-alt"></i>{{ form.location(placeholder="Location (Address)", class="") }}</div>
+                    </div>
+                    <br>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex text-right-mobile"><i class="far fa-clock"></i>{{ form.start_time(class="") }}</div>
+                        <div class="flex text-left-mobile"><i class="fas fa-clock"></i>{{ form.end_time(class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile icon"><i class="far fa-calendar"></i>{{ form.start_date(class_="", onchange="choose_start_date()", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile"><div class="checkbox-field"><span>Repeated?</span><div id="check-repeated" class="checkbox" onclick="checkbox()"><i class="fas fa-check"></i></div></div></div>
+                    </div>
+                    <div class="flex-box-mobile icon" id="form-repeated-label">
+                        <div class="flex"><div class="repeated-label">Until...</div></div>
+                    </div>
+                    <div class="flex-box-mobile icon" id="form-repeated">
+                        <div class="flex text-right-mobile"><i class="fas fa-calendar icon-repeated"></i>{{ form.end_date(class_="", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile"><i class="fas fa-sync-alt icon-repeated"></i>
+                            <select class="" id="repeated" name="repeated">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly" id="monthly">Monthly</option>
+                                <option value="weekday" id="thday">Th Day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-title">Contact</div>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex text-right-mobile"><i class="fas fa-user"></i>{{ form.contact_name(placeholder="Name", class="") }}</div>
+                        <div class="flex text-left-mobile"><i class="far fa-envelope"></i>{{ form.contact_email(placeholder="Email", class="") }}</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="section-title">Optional</div>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex text-right-mobile"><i class="fas fa-dollar-sign"></i>{{ form.cost(placeholder="Cost (e.g. $5)", class="", autocapitalize="off") }}</div>
+                        <div class="flex text-left-mobile"><i class="fas fa-phone"></i>{{ form.contact_phone(placeholder="Phone", class="",  autocapitalize="off") }}</div>
+                    </div>
+                    <div class="flex-box-mobile icon">
+                        <div class="flex text-right-mobile"><i class="fas fa-globe"></i>{{ form.url(placeholder="Web URL", class="", autocapitalize="off") }}</div>
+                        <div class="flex text-left-mobile"></div>
+                    </div>
+                    <br>
+                    <div class="flex-box-mobile">
+                        <div class="flex">
+                            {{ form.photo(class="hidden",onchange="choose_photo(this)",accept="image/*") }}
+                            <div id="upload-photo" onclick="upload_photo()"><i class="fas fa-image"></i>Upload Photo
+                                <div id="error-photo"></div>
+                            </div>
+                            <img alt="" id="preview-photo" src="">
+                            <div id="cancel-photo" onclick="remove_photo()">Remove Photo</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div id="loading-div">
+                        <div class="loading"><div></div><div></div><div></div><div></div></div>
+                    </div>
+                    {{ form.submit(class="submit",onclick="form_submit()") }}
+                </div>
+                <br>
+                <a href="{{ url_for('events') }}" class="link">Cancel</a>
+
+            </form>
+        </div>
+
+
+    </div>
+
+<script>
+
+
+function upload_photo() {
+    $('#photo').click();
+    return false;
+}
+
+var has_photo = false;
+var photo_type = "";
+function choose_photo(photo) {
+
+    var file = photo.files[0];
+    var imagefile = file.type;
+    photo_type = file.type.split("/")[1];
+
+    document.getElementById('preview-photo').style.display = "none";
+    document.getElementById('error-photo').style.display = "none";
+    document.getElementById('cancel-photo').style.display = 'none';
+
+    var match = ["image/jpeg","image/png","image/jpg","image/gif"];
+
+    if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]) || (imagefile==match[3]))) {
+        has_photo = false;
+        imageNotLoaded();
+        $('#photo').val('');
+        document.getElementById('error-photo').style.display = "block";
+        document.getElementById('error-photo').innerHTML = '<img class="error-icon" alt="" src="../img/error_invalid.png">Invalid file type (jpg, gif, png)';
+    } else {
+        if (file.size > 5000000) {
+            has_photo = false;
+            imageNotLoaded();
+            $('#photo').val('');
+            document.getElementById('error-photo').style.display = "block";
+            document.getElementById('error-photo').innerHTML = '<img class="error-icon" alt="" src="../img/error_invalid.png">Invalid file size. (Max: 5 MB)';
+        } else {
+            has_photo = true;
+            document.getElementById('preview-photo').style.display = "inline-block";
+            document.getElementById('cancel-photo').style.display = 'inline-block';
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(file);
+            //upload_photo()
+        }
+    }
+
+}
+function imageIsLoaded(e) {
+    $('#preview-photo').attr('src', e.target.result);
+}
+function imageNotLoaded() {
+    $('#preview-photo').attr('src', '');
+}
+function remove_photo() {
+    if (confirm('Would you like to remove photo?')) {
+        $('#photo').val('');
+        $('#preview-photo').attr('src', '');
+        has_photo = false;
+        document.getElementById('preview-photo').style.display = "none";
+        document.getElementById('error-photo').style.display = "none";
+        document.getElementById('cancel-photo').style.display = 'none';
+    }
+}
+
+var cat = false;
+var categories = [];
+var show_categories = [];
+$("#dropdown-options").hide();
+$("body").click(function (e) {
+    var selected = document.getElementById('dropdown-selected');
+    var category = document.getElementById('category');
+    var elt = $(e.target);
+    if ($(e.target).attr("id") == "dropdown-selected") {
+        if (cat) {
+            $("#dropdown-options").hide();
+            document.getElementById('drop').style.transform = 'rotate(0deg)'
+        } else {
+            $("#dropdown-options").show();
+            document.getElementById('drop').style.transform = 'rotate(180deg)'
+        }
+        cat = !cat;
+        console.log('dropdown');
+    } else if ($(e.target).attr("class") == "dropdown-option") {
+        categories.push($(e.target).attr('data-value'));
+        show_categories.push($(e.target).html());
+        $(e.target).addClass('selected');
+        $('#category').val(categories);
+
+        $('#dropdown-selected').removeClass('selected')
+
+        if (show_categories.length == 0) {
+            selected.innerHTML = 'Category (Choose all that apply)';
+        } else if (show_categories.length == 1) {
+            selected.innerHTML = show_categories[0];
+            $('#dropdown-selected').addClass('selected');
+            select
+        } else {
+            selected.innerHTML = show_categories[0];
+            for (var k = 1; k < show_categories.length; k++) {
+                selected.innerHTML += ', ' + show_categories[k];
+            }
+            $('#dropdown-selected').addClass('selected');
+        }
+
+        console.log($('#category').val());
+        console.log(show_categories);
+    } else if ($(e.target).attr("class") == "dropdown-option selected") {
+        var idx = categories.indexOf($(e.target).attr('data-value'));
+        var old_categories = categories;
+        var old_show = show_categories;
+        categories = [];
+        show_categories = [];
+        for (var i = 0; i < old_categories.length; i++) {
+            if (i != idx) {
+                categories.push(old_categories[i]);
+                show_categories.push(old_show[i]);
+            }
+        }
+        $(e.target).removeClass('selected');
+        $('#category').val(categories);
+
+        $('#dropdown-selected').removeClass('selected')
+
+        if (show_categories.length == 0) {
+            selected.innerHTML = 'Category';
+        } else if (show_categories.length == 1) {
+            selected.innerHTML = show_categories[0];
+            $('#dropdown-selected').addClass('selected');
+        } else {
+            selected.innerHTML = show_categories[0];
+            for (var k = 1; k < show_categories.length; k++) {
+                selected.innerHTML += ', ' + show_categories[k];
+            }
+            $('#dropdown-selected').addClass('selected');
+        }
+
+        console.log($('#category').val());
+        console.log(show_categories);
+    } else {
+        $("#dropdown-options").hide();
+        document.getElementById('drop').style.transform = 'rotate(0deg)'
+    }
+
+});
+
+
+
+function choose_start_date() {
+    var date = $('#start_date').val();
+    $('#end_date').val(date);
+
+    // calculate th weekday
+    var start_date = new Date(date);
+    var days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    var weekday = days[start_date.getDay()];
+    var th = 0;
+    for (var i = 0; i <= start_date.getDate()+1; i++) {
+        var temp = new Date(start_date.getFullYear()+'-'+(start_date.getMonth()+1)+'-'+i);
+        if (days[temp.getDay()] == weekday) {
+        	th ++;
+        }
+    }
+    if (th == 1) {
+        th = th+'st';
+    } else if (th == 2) {
+        th = th+'nd';
+    } else if (th == 3) {
+        th = th+'rd';
+    } else {
+        th = th+'th';
+    }
+    $('#thday').html('Every '+th+' '+weekday);
+
+    // calculate monthly
+    var monthly = start_date.getDate()+1;
+    if (monthly.toString().substring(monthly.toString().length-1) == '1') {
+        monthly = monthly+'st';
+    } else if (monthly.toString().substring(monthly.toString().length-1) == '2') {
+        monthly = monthly+'nd';
+    } else if (monthly.toString().substring(monthly.toString().length-1) == '3') {
+        monthly = monthly+'rd';
+    } else {
+        monthly = monthly+'th';
+    }
+    $('#monthly').html('Monthly ('+monthly+')');
+
+
+}
+
+var repeated = false;
+function checkbox() {
+    if (repeated) {
+        $('#check-repeated').removeClass('checked');
+        for (var i = 0; i < document.getElementsByClassName('icon-repeated').length; i++) {
+            document.getElementsByClassName('icon-repeated')[i].style.height = '0';
+        }
+        document.getElementById('form-repeated').style.height = '0';
+        document.getElementById('form-repeated-label').style.height = '0';
+        var date = $('#start_date').val();
+        $('#end_date').val(date);
+    } else  {
+        $('#check-repeated').addClass('checked');
+        for (var i = 0; i < document.getElementsByClassName('icon-repeated').length; i++) {
+            document.getElementsByClassName('icon-repeated')[i].style.height = 'auto';
+        }
+        document.getElementById('form-repeated').style.height = 'auto';
+        document.getElementById('form-repeated-label').style.height = 'auto';
+    }
+    document.getElementById('check-repeated').value = 'daily';
+    repeated = !repeated;
+    choose_start_date();
+}
+
+function form_submit() {
+    document.getElementById('submit').style.display = 'none';
+    document.getElementById('loading-div').style.display = 'block';
+}
+
+
+</script>
+
+{% endblock %}

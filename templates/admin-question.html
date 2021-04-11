@@ -1,0 +1,121 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - Questions{% endblock %}
+
+{% block content %}
+
+        <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu now"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('admin_new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('admin_events') }}"><div class="menu-mobile"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('admin_categories') }}"><div class="menu-mobile"><i class="fas fa-th-large"></i> Categories</div></a>
+        <a href="{{ url_for('admin_questions') }}"><div class="menu-mobile now"><i class="far fa-question-circle"></i> Questions</div></a>
+        <a href="{{ url_for('admin_settings') }}"><div class="menu-mobile"><i class="fas fa-cog"></i> Settings</div></a>
+        <div class="padding"></div>
+        <a href="{{ url_for('logout') }}"><div class="menu-mobile"><i class="fas fa-sign-out-alt"></i> Sign Out</div></a>
+    </div>
+
+
+    {% if form.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in form.errors %}
+                {% for error in form.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="page max-width margin-center">
+
+        <div class="section-title">New Question</div>
+        <div class="new new-category">
+            <form method="POST">
+                {{ form.csrf_token }}
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ form.question(placeholder="Question", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ form.answer(placeholder="Answer", class="form-answer") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ form.submit(class="submit") }}
+                </div>
+            </form>
+        </div>
+
+        <div class="section-title">Questions</div>
+        <div class="events">
+            {% for q in questions %}
+            <div class="event" id="question-{{ q.id }}">
+                <div class="flex-box cursor-pointer" onclick="toggle_question('{{ q.id }}')">
+                    <div class="title-category flex-3 flex-center text-left">
+                        <div class="question">{{ q.question }}</div>
+                    </div>
+                    <div class="flex flex-center text-right">
+                        <div class="settings">
+                            <a href="/admin/questions/edit/{{ q.id }}"><i class="fas fa-pen-square"></i></a>
+                            <span onclick="delete_question('{{ q.id }}')"><i class="fas fa-minus-square"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="details" id="details-{{ q.id }}">
+                    <div class="padding">
+                        <div class="answer">{{ q.answer }}</div>
+                        <div class="info">{{ q.date }}</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+
+<script>
+
+function toggle_question(e) {
+    console.log(document.getElementById('details-'+e).style.height);
+
+    if (document.getElementById('details-'+e).style.height == 'auto') {
+        document.getElementById('details-'+e).style.height = '0';
+        document.getElementById('question-'+e).style.background = 'none';
+    } else {
+        var details = document.getElementsByClassName('details');
+        var events = document.getElementsByClassName('event');
+
+        for (var i = 0; i < details.length; i++) {
+            details[i].style.height = '0';
+            events[i].style.background = 'none';
+        }
+        document.getElementById('details-'+e).style.height = 'auto';
+        document.getElementById('question-'+e).style.background = '#f6f6f6';
+    }
+}
+
+function delete_question(id) {
+    if (confirm('Would you like to remove this question?')) {
+        window.location.href = '/admin/questions/delete/'+id;
+    }
+}
+
+</script>
+
+{% endblock %}
