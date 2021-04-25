@@ -47,19 +47,19 @@ app.config.update(
     #MAIL_SERVER='smtp.mail.com',
     #MAIL_PORT=465,
     #MAIL_USE_SSL=True,
-    #MAIL_USERNAME='dograntcounty@email.com',
-    MAIL_SERVER='smtp.office365.com',
+    #MAIL_USERNAME='',
+    MAIL_SERVER='',
     MAIL_PORT=587,
     MAIL_USE_TSL=True,
-    MAIL_USERNAME='contact@dograntcounty.com',
-    MAIL_PASSWORD='GC-Community-Events1!'
+    MAIL_USERNAME='',
+    MAIL_PASSWORD=''
 )
 
 mail = Mail(app)
 
 
 def send_email(recipients, title, text_body, html_body):
-    msg = Message(title, sender='contact@dograntcounty.com', recipients=recipients)
+    msg = Message(title, sender='', recipients=recipients)
     msg.body = text_body
     msg.html = html_body
     mail.send(msg)
@@ -96,7 +96,7 @@ class User(object):
         self.is_authenticated = True
         self.is_active = True
         self.is_anonymous = False
-        if id == "GC-Community-Events1!":
+        if id == "":
             self.is_admin = True
         else:
             self.is_admin = False
@@ -109,7 +109,7 @@ class User(object):
 
 
 def authenticate_id(id):
-    if id == 'GC-Community-Events1!':
+    if id == '':
         return id
     else:
         for p in db.all_events():
