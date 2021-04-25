@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Guidelines - Do! Grant County{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex flex-center logo-bar">
+                <a href="{{ url_for('index') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-white.svg"></a>
+            </div>
+            <div class="flex flex-center menu-bar desktop">
+                <div class="menu now"><a href="{{ url_for('events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('about') }}">About</a></div>
+                <div class="menu"><a href="{{ url_for('faq') }}">FAQ</a></div>
+                <div class="menu"><a href="{{ url_for('contact') }}">Contact</a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('events') }}"><div class="menu-mobile now"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('about') }}"><div class="menu-mobile"><i class="fas fa-info-circle"></i> About</div></a>
+        <a href="{{ url_for('faq') }}"><div class="menu-mobile"><i class="far fa-question-circle"></i> FAQ</div></a>
+        <a href="{{ url_for('contact') }}"><div class="menu-mobile"><i class="fas fa-envelope"></i> Contact</div></a>
+    </div>
+
+
+    <div class="background desktop">
+        <div class="max-width margin-center"></div>
+    </div>
+
+    <div class="page max-width margin-center">
+        <div class="about">
+            <h2>Event Guidelines</h2>
+            <div class="content">
+                <div class="title">Purpose</div>
+                <div class="guide">
+                    Do! Grant County is an interactive, web-based program that enables the
+                    community to post, view and search for events of broad interest to the community. The
+                    website is a tool for the public to promote community events and activities. It’s specifically
+                    designed to house information about special events and public meetings.
+                </div>
+
+                <div class="title">Overview</div>
+                <div class="guide">
+                    Do! Grant County may be used to promote educational, social, cultural, or recreational events in Grant County, Indiana that are open
+                    to the general public, sponsored by non-profit, civic, social, charitable, fraternal or educational organizations.
+                    Do! Grant County may not be used to promote individual interests, political campaigns, or commercial events.
+                </div>
+
+                <div class="title">Acceptable Events</div>
+                <div class="guide">
+                    Events will be posted on the website if they meet at least one of the following criteria:
+                    <ul>
+                        <li>Organized by a Grant County, Indiana affiliated group.</li>
+                        <li>Organized by a non-profit, civic, social, charitable, fraternal or educational organization operating within Grant County, Indiana.</li>
+                        <li>Promotes a family-friendly activity or event.</li>
+                        <li>Encourages participation in arts and culture, athletics, or community development.</li>
+                    </ul>
+                </div>
+
+                <div class="title">Unacceptable Events</div>
+                <div class="guide">
+                    Please note that events will be rejected if they:
+                    <ul>
+                        <li>Promote, exhibit, illustrate, or contain obscene/pornographic/sexual content of any kind.</li>
+                        <li>Encourage violence, hatred or bigotry.</li>
+                        <li>Do not comply with municipal, state, or federal law and/or promote illegal activity.</li>
+                        <li>Have a solely commercial intent (i.e. sales and special promotions).</li>
+                        <li>Are yard or garage sales (unless they are organized by a non-profit, service club or other community group including city-wide events).</li>
+                        <li>Are not open to the public.</li>
+                    </ul>
+                </div>
+
+                <div class="title">Event Review and Publishing</div>
+                <div class="guide">
+                    All submitted events are sent to our administration team for approval before they are published to the website. We reserve the right to post, refuse to post, or remove any event
+                    from our online calendar at any time, without notice. We will do our best to review a submitted event within 2-3 business days. The administration team reserves the right to edit event information for length, spelling,
+                    language and clarity. The event submission form must be filled out entirely, including event description and contact information. Submissions with blank entry fields or no description may not be processed for posting.
+                </div>
+
+                <div class="title">Event Submission Form Content</div>
+                <div class="guide">
+                    In submitting events to the website, please follow these simple guidelines to ensure sufficient detail and consistency of style throughout the site:
+                    <ul>
+                        <li><b>Category</b>: Select all categories that apply to your event. More than one category can be selected.</li>
+                        <li><b>Title</b>: Use initial caps and lower case throughout.</li>
+                        <li><b>Host</b>: Use initial caps and lower case throughout.</li>
+                        <li><b>Description</b>: Provide all the details of the event. Try to keep the information in this box to no more than three or four sentences.</li>
+                        <li><b>Location</b>:  Provided a full address of the location. City, state and ZIP code should be included.</li>
+                        <li><b>Start Date & Start Time</b>: List the specific start date and time of the event.</li>
+                        <li><b>End Date & End Time</b>: List the specific end date and time of the event.</li>
+                        <li><b>Contact Name</b>: List the first and last name of the contact person.</li>
+                        <li><b>Contact Email</b>: Provide a working email address for any communication about this event.</li>
+                        <li><b>Contact Phone</b>: Provide a working phone number for people to directly communicate with the contact person. (Optional)</li>
+                        <li><b>Cost</b>: Use integers only to list the admission fee of the event. (Optional)</li>
+                        <li><b>Web URL</b>: Provide a website that has been specifically created for the event for more information. (Optional)</li>
+                        <li><b>Photo</b>: Upload a photo that describes the event. (Optional)</li>
+                    </ul>
+                    This form must be completed in order to be considered for posting; no exceptions. The administration team reserves the right to limit the number of postings from any organization and to
+                    reject any posting when deemed to be offensive, inappropriate or not in the public’s interest or in conflict with this policy. The administration team reserves the right to discontinue the program at any time, if they see a need to do so.
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+<script>
+
+</script>
+
+{% endblock %}

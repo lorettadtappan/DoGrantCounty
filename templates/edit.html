@@ -1,0 +1,113 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-3 flex-center logo-bar">
+                <img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg">
+            </div>
+            <div class="flex flex-center menu-bar">
+                <div class="menu"><a href="{{ url_for('user_logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page max-width margin-center">
+
+        <div class="new">
+            <h1><div>Edit Event</div></h1>
+            <form method="POST">
+
+                {{ form.csrf_token }}
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.category(class="category") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.title(placeholder="Title", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.organization(placeholder="Organization (Host)", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.start_date(class_="", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile">{{ form.start_time(class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.end_date(class_="", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile">{{ form.end_time(class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.location(placeholder="Location", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.description(placeholder="Description (Optional)", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.cost(placeholder="Cost (Optional)", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.url(placeholder="Web URL", class="") }}</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.contact_name(placeholder="Contact Name", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.contact_email(placeholder="Contact Email", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.contact_phone(placeholder="Contact Phone", class="") }}</div>
+                        <div class="flex text-left-mobile"></div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex">
+
+                            {{ form.photo(class="hidden",onchange="choose_photo(this)") }}
+                            <div id="upload-photo" onclick="upload_photo()">Upload Photo...
+                                <div id="error-photo"></div>
+                            </div>
+                            {% if form.photo.data != 0  %}
+                                <img alt="" id="preview-photo" src="/static/event-pics/{{ id }}.jpg">
+                            {% else %}
+                                <img alt="" id="preview-photo" src="">
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="section social">
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile"><i class="fab fa-facebook-f"></i>{{ form.facebook(placeholder="Facebook", class="social-media") }}</div>
+                        <div class="flex text-left-mobile"><i class="fab fa-twitter"></i>{{ form.twitter(placeholder="Twitter", class="social-media") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile"><i class="fab fa-instagram"></i>{{ form.instagram(placeholder="Instagram", class="social-media") }}</div>
+                        <div class="flex text-left-mobile"></div>
+                    </div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ form.submit(class="submit", value="Edit Event") }}
+                </div>
+                <br>
+                <a href="/admin/events/{{ year }}" class="link">Cancel</a>
+                {{ form.photo() }}
+
+            </form>
+        </div>
+    </div>
+
+
+<script>
+var select = new SlimSelect({
+    select: '#category',
+    placeholder: 'Category',
+    showSearch: false,
+    allowDeselect: true,
+    closeOnSelect: false
+});
+select.set([ {% for c in categories %} '{{ c }}', {% endfor %}]);
+</script>
+
+{% endblock %}

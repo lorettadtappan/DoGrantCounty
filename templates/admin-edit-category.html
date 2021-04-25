@@ -1,0 +1,73 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - Edit Category{% endblock %}
+
+{% block content %}
+
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu now"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('admin_new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('admin_events') }}"><div class="menu-mobile"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('admin_categories') }}"><div class="menu-mobile now"><i class="fas fa-th-large"></i> Categories</div></a>
+        <a href="{{ url_for('admin_questions') }}"><div class="menu-mobile"><i class="far fa-question-circle"></i> Questions</div></a>
+        <a href="{{ url_for('admin_settings') }}"><div class="menu-mobile"><i class="fas fa-cog"></i> Settings</div></a>
+        <div class="padding"></div>
+        <a href="{{ url_for('logout') }}"><div class="menu-mobile"><i class="fas fa-sign-out-alt"></i> Sign Out</div></a>
+    </div>
+
+    {% if form.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in form.errors %}
+                {% for error in form.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="page max-width margin-center">
+
+        <div class="new">
+            <h1><div>Edit Category</div></h1>
+            <form method="POST">
+
+                {{ form.csrf_token }}
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.title(placeholder="Title", class="form-full") }}</div>
+                    </div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ form.submit(class="submit", value="Edit Category") }}
+                </div>
+                <br>
+                <a href="{{ url_for('admin_categories') }}" class="link">Cancel</a>
+
+            </form>
+        </div>
+    </div>
+
+
+<script>
+
+</script>
+
+{% endblock %}

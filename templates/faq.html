@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - Do! Grant County{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex flex-center logo-bar">
+                <a href="{{ url_for('index') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-white.svg"></a>
+            </div>
+            <div class="flex flex-center menu-bar desktop">
+                <div class="menu"><a href="{{ url_for('events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('about') }}">About</a></div>
+                <div class="menu now"><a href="{{ url_for('faq') }}">FAQ</a></div>
+                <div class="menu"><a href="{{ url_for('contact') }}">Contact</a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('events') }}"><div class="menu-mobile"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('about') }}"><div class="menu-mobile"><i class="fas fa-info-circle"></i> About</div></a>
+        <a href="{{ url_for('faq') }}"><div class="menu-mobile now"><i class="far fa-question-circle"></i> FAQ</div></a>
+        <a href="{{ url_for('contact') }}"><div class="menu-mobile"><i class="fas fa-envelope"></i> Contact</div></a>
+    </div>
+
+
+    <div class="background desktop">
+        <div class="max-width margin-center"></div>
+    </div>
+
+    <div class="page max-width margin-center">
+        <div class="faq">
+            <h2>{{ setting.faq_title }}</h2>
+
+            <div class="background-city margin-center"></div>
+            <div class="questions">
+                {% for q in questions %}
+                <div class="question" id="question-{{ q.id }}">
+                    <div class="flex-box cursor-pointer" onclick="toggle_question('{{ q.id }}')">
+                        <div class="title flex-5 flex-center text-left">{{ q.question }}</div>
+                        <div class="arrow flex-1 flex-center text-right desktop"><i class="fas fa-angle-down"></i></div>
+                    </div>
+                    <div class="details" id="details-{{ q.id }}">
+                        <div class="padding">
+                            <div class="answer">{{ q.answer }}</div>
+                            <div class="info">{{ q.date }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if setting.faq_content != '' %}
+            <p>{{ setting.faq_content }}</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+<script>
+
+function toggle_question(e) {
+    console.log(document.getElementById('details-'+e).style.height);
+
+    if (document.getElementById('details-'+e).style.height == 'auto') {
+        document.getElementById('details-'+e).style.height = '0';
+        document.getElementById('question-'+e).style.background = 'none';
+    } else {
+        var details = document.getElementsByClassName('details');
+        var questions = document.getElementsByClassName('question');
+
+        for (var i = 0; i < details.length; i++) {
+            details[i].style.height = '0';
+            questions[i].style.background = 'none';
+        }
+        document.getElementById('details-'+e).style.height = 'auto';
+        document.getElementById('question-'+e).style.background = '#f6f6f6';
+    }
+}
+
+</script>
+
+{% endblock %}

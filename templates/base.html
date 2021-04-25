@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Do! Grant County" />
+    <meta property="og:image" content="/static/img/icon-144.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="144">
+    <meta property="og:image:height" content="144">
+
+    <link rel="shortcut icon" href="/static/img/icon-70.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/static/img/icon-70.png"/>
+	<link rel="apple-touch-icon" sizes="114x114" href="/static/img/icon-114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/img/icon-144.png" />
+
+
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css?ver=2.9">
+    <link rel="stylesheet" type="text/css" href="/static/css/dropdown.css?ver=2.9">
+
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Expanded:300,400,500,600,700" rel="stylesheet">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90860253-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-90860253-1');
+    </script>
+
+
+    <!--
+    <script type="text/javascript" src="/static/js/polyfill.js"></script>
+    <script type="text/javascript" src="/static/js/polyfill.position-sticky.js"></script>
+    -->
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body class="animated fadeIn">
+
+{% block content %}
+
+{% endblock %}
+
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="alerts" role="alert">
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
+<script>
+var menu_status = false;
+
+function menu() {
+    console.log(document.getElementById('menu-bar-mobile').style.transform);
+    if (menu_status) {
+        document.getElementById('menu-bar-mobile').style.transform = 'scaleY(0)';
+    } else {
+        document.getElementById('menu-bar-mobile').style.transform = 'scaleY(1)';
+    }
+    menu_status = !menu_status;
+}
+
+
+$("body").click(function (e) {
+
+    if ($(e.target).attr("class") == "menu-button" || $(e.target).attr("class") == "fas fa-bars") {
+        if (menu_status) {
+            document.getElementById('menu-bar-mobile').style.transform = 'scaleY(0)';
+        } else {
+            document.getElementById('menu-bar-mobile').style.transform = 'scaleY(1)';
+        }
+        menu_status = !menu_status;
+    } else if ($(e.target).attr("class") == "menu-mobile" || $(e.target).attr("class") == "menu-mobile now") {
+
+    } else {
+        document.getElementById('menu-bar-mobile').style.transform = 'scaleY(0)';
+        menu_status = false;
+    }
+
+});
+</script>
+
+
+</body>
+</html>

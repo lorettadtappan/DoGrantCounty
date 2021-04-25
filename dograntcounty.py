@@ -1,4 +1,17 @@
 # coding=utf-8
+<<<<<<< HEAD
+from flask import Flask, render_template, flash, redirect, url_for, request, session
+from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, PasswordField, HiddenField, TextAreaField
+from wtforms.fields.html5 import DateField, EmailField, TelField
+from wtforms_components import TimeField, DateRange
+from wtforms.validators import Email, Length, InputRequired
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_hashing import Hashing
+from flask_mail import Mail, Message
+import datetime, re, os
+=======
 from flask import Flask, render_template, flash, redirect, url_for, request, session, jsonify
 from wtforms import StringField, SubmitField, SelectField, SelectMultipleField, PasswordField, BooleanField, HiddenField, TextAreaField
 from wtforms.fields.html5 import DateField, EmailField, TelField, DecimalField, URLField, IntegerField
@@ -11,6 +24,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_hashing import Hashing
 from flask_mail import Mail, Message
 import string, random, datetime, re, os
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 
 import db
 
@@ -33,19 +47,19 @@ app.config.update(
     #MAIL_SERVER='smtp.mail.com',
     #MAIL_PORT=465,
     #MAIL_USE_SSL=True,
-    #MAIL_USERNAME='dograntcounty@email.com',
-    MAIL_SERVER='smtp.office365.com',
+    #MAIL_USERNAME='',
+    MAIL_SERVER='',
     MAIL_PORT=587,
     MAIL_USE_TSL=True,
-    MAIL_USERNAME='contact@dograntcounty.com',
-    MAIL_PASSWORD='GC-Community-Events1!'
+    MAIL_USERNAME='',
+    MAIL_PASSWORD=''
 )
 
 mail = Mail(app)
 
 
 def send_email(recipients, title, text_body, html_body):
-    msg = Message(title, sender='contact@dograntcounty.com', recipients=recipients)
+    msg = Message(title, sender='', recipients=recipients)
     msg.body = text_body
     msg.html = html_body
     mail.send(msg)
@@ -82,7 +96,7 @@ class User(object):
         self.is_authenticated = True
         self.is_active = True
         self.is_anonymous = False
-        if id == "GC-Community-Events1!":
+        if id == "":
             self.is_admin = True
         else:
             self.is_admin = False
@@ -95,7 +109,7 @@ class User(object):
 
 
 def authenticate_id(id):
-    if id == 'GC-Community-Events1!':
+    if id == '':
         return id
     else:
         for p in db.all_events():
@@ -182,20 +196,32 @@ def index():
     return redirect(url_for('events'))
 
 
+<<<<<<< HEAD
+@app.route('/about/', methods=["GET", "POST"])
+=======
 @app.route('/about', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def about():
     setting = db.setting()
     return render_template('about.html', setting=setting)
 
 
+<<<<<<< HEAD
+@app.route('/events/', methods=["GET", "POST"])
+=======
 @app.route('/events', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def events():
     year = datetime.datetime.today().year
     month = months_num[datetime.datetime.today().month]
     return redirect(url_for('event', year=year, month=month))
 
 
+<<<<<<< HEAD
+@app.route('/events2/', methods=["GET", "POST"])
+=======
 @app.route('/events/', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def events2():
     year = datetime.datetime.today().year
     month = months_num[datetime.datetime.today().month]
@@ -369,7 +395,11 @@ def search_event2():
     return redirect(url_for('events'))
 
 
+<<<<<<< HEAD
+@app.route('/events/new/', methods=["GET", "POST"])
+=======
 @app.route('/events/new', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def new():
 
     global new_event
@@ -544,7 +574,11 @@ def new():
     return render_template('new.html', form=form, categories=db.categories())
 
 
+<<<<<<< HEAD
+@app.route('/update/events/new/', methods=["GET", "POST"])
+=======
 @app.route('/update/events/new', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def update_new():
 
     global new_event
@@ -612,12 +646,20 @@ def update_new():
     return render_template('new-event.html', form=form, categories=db.categories())
 
 
+<<<<<<< HEAD
+@app.route('/guidelines/', methods=["GET", "POST"])
+=======
 @app.route('/guidelines', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def guidelines():
     return render_template('guidelines.html')
 
 
+<<<<<<< HEAD
+@app.route('/events/new/photo/', methods=["GET", "POST"])
+=======
 @app.route('/events/new/photo', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def new_photo():
 
     global new_event
@@ -649,7 +691,11 @@ def new_photo():
     return render_template('new-photo.html', form=form)
 
 
+<<<<<<< HEAD
+@app.route('/events/new/photo/upload/', methods=["POST"])
+=======
 @app.route('/events/new/photo/upload', methods=["POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def upload_photo():
 
     global new_event
@@ -668,7 +714,11 @@ def upload_photo():
     return redirect(url_for('events'))
 
 
+<<<<<<< HEAD
+@app.route('/faq/', methods=["GET", "POST"])
+=======
 @app.route('/faq', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def faq():
     setting = db.setting()
     questions = db.questions()
@@ -679,7 +729,11 @@ def faq():
 @app.route('/contact', methods=["GET", "POST"])
 def contact():
     setting = db.setting()
+<<<<<<< HEAD
+    return render_template('contact.html/', setting=setting)
+=======
     return render_template('contact.html', setting=setting)
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 
 
 class NewEventForm(FlaskForm):
@@ -816,7 +870,11 @@ def admin():
     return render_template('admin-login.html', form=form)
 
 
+<<<<<<< HEAD
+@app.route('/admin/events/', methods=["GET", "POST"])
+=======
 @app.route('/admin/events', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def admin_events():
 
     if not current_user.is_authenticated or not current_user.is_admin:
@@ -893,7 +951,11 @@ def admin_event(year):
         session['admin-filter-event'] = category.category.data
         return redirect(url_for('admin_event', year=year))
 
+<<<<<<< HEAD
+    return render_template('admin-event.html/', year=year, controls=controls, events=events, pendings=pendings, edits=edits, nums=nums, event_dates=event_dates, search=search, category=category)
+=======
     return render_template('admin-event.html', year=year, controls=controls, events=events, pendings=pendings, edits=edits, nums=nums, event_dates=event_dates, search=search, category=category)
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 
 
 @app.route('/admin/events/search/<keyword>', methods=["GET", "POST"])
@@ -909,7 +971,10 @@ def admin_search_event(keyword):
     event_dates = db.admin_arrange_events(events)[1]
 
     nums = []
+<<<<<<< HEAD
+=======
     keys = []
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
     for n in event_dates.keys():
         nums.append(n)
         event_dates[n] = datetime.datetime.strptime(str(n), '%m').strftime("%B")
@@ -1203,7 +1268,11 @@ def admin_edit_event(id):
     return render_template('admin-edit-event.html', form=form, id=id, categories=categories, all_categories=all_categories, year=admin_year, repeated=repeated, end_date=end_date)
 
 
+<<<<<<< HEAD
+@app.route('/admin/events/new/', methods=["GET", "POST"])
+=======
 @app.route('/admin/events/new', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def admin_new():
 
     today = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
@@ -1269,7 +1338,11 @@ def admin_new():
     return render_template('admin-new.html', form=form, categories=db.categories())
 
 
+<<<<<<< HEAD
+@app.route('/admin/questions/', methods=["GET", "POST"])
+=======
 @app.route('/admin/questions', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def admin_questions():
 
     if not current_user.is_authenticated or not current_user.is_admin:
@@ -1295,7 +1368,11 @@ def admin_questions():
     return render_template('admin-question.html', questions=questions, form=form)
 
 
+<<<<<<< HEAD
+@app.route('/admin/settings/', methods=["GET", "POST"])
+=======
 @app.route('/admin/settings', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def admin_settings():
 
     if not current_user.is_authenticated or not current_user.is_admin:
@@ -1409,7 +1486,11 @@ def admin_error(code):
     return render_template('admin-error.html', message=message)
 
 
+<<<<<<< HEAD
+@app.route('/admin/categories/', methods=["GET", "POST"])
+=======
 @app.route('/admin/categories', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def admin_categories():
 
     if not current_user.is_authenticated or not current_user.is_admin:
@@ -1518,7 +1599,11 @@ def admin_edit_question(id):
     return render_template('admin-edit-question.html', form=form, id=id)
 
 
+<<<<<<< HEAD
+@app.route('/events/edit/', methods=["GET", "POST"])
+=======
 @app.route('/events/edit', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def edit_event():
 
     if not current_user.is_authenticated:
@@ -1690,7 +1775,11 @@ def edit_event():
     return render_template('edit-event.html', form=form, id=event['id'], categories=categories, all_categories=all_categories, repeated=repeated, end_date=end_date)
 
 
+<<<<<<< HEAD
+@app.route('/events/login/', methods=["GET", "POST"])
+=======
 @app.route('/events/login', methods=["GET", "POST"])
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c
 def login():
 
     form = UserLoginForm()
@@ -1743,4 +1832,8 @@ def delete_event(id):
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run()
+=======
+    app.run()
+>>>>>>> e4b61b7595c8a18fb64b8632a62f9a096ff8459c

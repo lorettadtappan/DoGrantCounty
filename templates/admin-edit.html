@@ -1,0 +1,118 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - Edit Event{% endblock %}
+
+{% block content %}
+
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu now"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <div class="menu-mobile now"><a href="{{ url_for('admin_events') }}"><i class="far fa-calendar-alt"></i> Events</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('admin_categories') }}"><i class="fas fa-th-large"></i> Categories</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('admin_questions') }}"><i class="far fa-question-circle"></i> Questions</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('admin_settings') }}"><i class="fas fa-cog"></i> Settings</a></div>
+        <div class="padding"></div>
+        <div class="menu-mobile"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sign Out</a></div>
+    </div>
+
+
+    <div class="page max-width margin-center">
+
+        <div class="new">
+            <h1><div>Edit Event</div></h1>
+            <form method="POST">
+
+                {{ form.csrf_token }}
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.category(class="category") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.title(placeholder="Title", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.organization(placeholder="Organization (Host)", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.start_date(class_="", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile">{{ form.start_time(class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.end_date(class_="", pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}") }}</div>
+                        <div class="flex text-left-mobile">{{ form.end_time(class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.location(placeholder="Location", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex">{{ form.description(placeholder="Description (Optional)", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.cost(placeholder="Cost (Optional)", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.url(placeholder="Web URL", class="") }}</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.contact_name(placeholder="Contact Name", class="") }}</div>
+                        <div class="flex text-left-mobile">{{ form.contact_email(placeholder="Contact Email", class="") }}</div>
+                    </div>
+                    <div class="flex-box-mobile">
+                        <div class="flex text-right-mobile">{{ form.contact_phone(placeholder="Contact Phone", class="") }}</div>
+                        <div class="flex text-left-mobile"></div>
+                    </div>
+                </div>
+                {% if form.photo.data == 1 %}
+                <div class="section">
+                    <div class="flex-box-mobile">
+                        <div class="flex">
+                            <img class="photo" alt="" src="/static/event-pics/{{ id }}.jpg">
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="flex-box-mobile">
+                {{ form.submit(class="submit", value="Edit Event") }}
+                </div>
+                <br>
+                <a href="/admin/events/{{ year }}" class="link">Cancel</a>
+                {{ form.photo() }}
+
+            </form>
+        </div>
+    </div>
+
+
+<script>
+var select = new SlimSelect({
+    select: '#category',
+    placeholder: 'Category',
+    showSearch: false,
+    allowDeselect: true,
+    closeOnSelect: false
+});
+select.set([ {% for c in categories %} '{{ c }}', {% endfor %}]);
+
+$('#cost').keyup(function () {
+    var cost = document.getElementById('cost');
+    document.getElementById('cost').value = cost.value.replace(/[^0-9\.\s]+/, '');
+});
+
+</script>
+
+{% endblock %}

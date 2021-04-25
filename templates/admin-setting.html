@@ -1,0 +1,135 @@
+{% extends 'admin-base.html' %}
+
+{% block title %}Admin - Settings{% endblock %}
+
+{% block content %}
+
+
+        <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex-2 flex-center logo-bar">
+                <a href="{{ url_for('admin') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-purple.svg"> <div class="label">Admin</div></a>
+            </div>
+            <div class="flex-5 flex-center menu-bar desktop">
+                <div class="menu"><a href="{{ url_for('admin_events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('admin_categories') }}">Categories</a></div>
+                <div class="menu"><a href="{{ url_for('admin_questions') }}">Questions</a></div>
+                <div class="menu now"><a href="{{ url_for('admin_settings') }}">Settings</a></div>
+                <div class="menu"><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i></a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <a href="{{ url_for('admin_new') }}"><div class="menu-mobile"><i class="fas fa-plus"></i> Add Event</div></a>
+        <a href="{{ url_for('admin_events') }}"><div class="menu-mobile"><i class="far fa-calendar-alt"></i> Events</div></a>
+        <a href="{{ url_for('admin_categories') }}"><div class="menu-mobile"><i class="fas fa-th-large"></i> Categories</div></a>
+        <a href="{{ url_for('admin_questions') }}"><div class="menu-mobile"><i class="far fa-question-circle"></i> Questions</div></a>
+        <a href="{{ url_for('admin_settings') }}"><div class="menu-mobile now"><i class="fas fa-cog"></i> Settings</div></a>
+        <div class="padding"></div>
+        <a href="{{ url_for('logout') }}"><div class="menu-mobile"><i class="fas fa-sign-out-alt"></i> Sign Out</div></a>
+    </div>
+
+
+    {% if about.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in about.errors %}
+                {% for error in about.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if faq.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in faq.errors %}
+                {% for error in faq.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    {% if contact.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in contact.errors %}
+                {% for error in contact.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="page max-width margin-center">
+
+        <div class="section-title">About</div>
+
+        <div class="new new-category">
+            <form method="POST">
+                {{ about.csrf_token }}
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ about.about_title(placeholder="Title", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ about.about_content(placeholder="Content", class="form-answer") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ about.about_submit(class="submit") }}
+                </div>
+            </form>
+        </div>
+
+        <div class="section-title">FAQ</div>
+
+        <div class="new new-category">
+            <form method="POST">
+                {{ faq.csrf_token }}
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ faq.faq_title(placeholder="Title", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ faq.faq_content(placeholder="Content (Optional)", class="form-answer") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ faq.faq_submit(class="submit") }}
+                </div>
+            </form>
+        </div>
+
+        <div class="section-title">Contact</div>
+
+        <div class="new new-category">
+            <form method="POST">
+                {{ contact.csrf_token }}
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ contact.contact_title(placeholder="Title", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ contact.contact_email(placeholder="Email", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ contact.contact_phone(placeholder="Phone", class="form-full") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                    <div class="flex">{{ contact.contact_content(placeholder="Content (Optional)", class="form-answer") }}</div>
+                </div>
+                <div class="flex-box-mobile">
+                {{ contact.contact_submit(class="submit") }}
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+<script>
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}New Event - Do! Grant County{% endblock %}
+
+{% block content %}
+
+    <div class="header">
+        <div class="flex-box max-width margin-center margin-side">
+            <div class="flex flex-center logo-bar">
+                <a href="{{ url_for('index') }}"><img class="logo" alt="DO GRANTCOUNTY" src="/static/img/logo-white.svg"></a>
+            </div>
+            <div class="flex flex-center menu-bar desktop">
+                <div class="menu now"><a href="{{ url_for('events') }}">Events</a></div>
+                <div class="menu"><a href="{{ url_for('about') }}">About</a></div>
+                <div class="menu"><a href="{{ url_for('faq') }}">FAQ</a></div>
+                <div class="menu"><a href="{{ url_for('contact') }}">Contact</a></div>
+            </div>
+            <div class="flex flex-center menu-bar mobile">
+                <div class="menu-button" onclick="menu()"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-bar-mobile" class="mobile">
+        <div class="menu-mobile now"><a href="{{ url_for('events') }}"><i class="far fa-calendar-alt"></i> Events</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('about') }}"><i class="fas fa-info-circle"></i> About</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('faq') }}"><i class="far fa-question-circle"></i> FAQ</a></div>
+        <div class="menu-mobile"><a href="{{ url_for('contact') }}"><i class="fas fa-envelope"></i> Contact</a></div>
+    </div>
+
+    <div class="background desktop">
+        <div class="max-width margin-center"></div>
+    </div>
+
+
+    {% if form.errors %}
+        <div id="alerts" role="alert">
+            {% for field_errors in form.errors %}
+                {% for error in form.errors[field_errors] %}
+                    <div class="alert">{{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="page max-width margin-center">
+
+        <div class="new">
+            <h1><div>New Event</div></h1>
+            <p>Your event has been successfully added. It is currently in a pending status, waiting for our administrator's verification. Meanwhile, you can go ahead and add a photo for your event, or simply go back and search for other events!</p>
+            <form method="post" enctype="multipart/form-data" >
+
+                {{ form.csrf_token }}
+                <div class="section">
+                    <div class="section-title">Photo</div>
+                    <div class="flex-box-mobile">
+                        <div class="flex">
+
+                            {{ form.photo(class="hidden",onchange="choose_photo(this)") }}
+                            <div id="upload-photo" onclick="upload_photo()"><i class="fas fa-image"></i>Upload Photo
+                                <div id="error-photo"></div>
+                            </div>
+                            <img alt="" id="preview-photo" src="">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-box-mobile">
+                    {{ form.submit(class="submit") }}
+                </div>
+                <br>
+                <a href="{{ url_for('events') }}" class="link">I do not want to add a photo.</a>
+
+            </form>
+        </div>
+
+
+    </div>
+
+<script>
+
+
+function upload_photo() {
+    $('#photo').click();
+    return false;
+}
+
+var has_photo = false;
+var photo_type = "";
+function choose_photo(photo) {
+
+    var file = photo.files[0];
+    var imagefile = file.type;
+    photo_type = file.type.split("/")[1];
+
+    document.getElementById('error-photo').style.display = "none";
+
+    var match = ["image/jpeg","image/png","image/jpg","image/gif"];
+
+    if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2]) || (imagefile==match[3]))) {
+        has_photo = false;
+        imageNotLoaded();
+        $('#photo').val('');
+        document.getElementById('error-photo').style.display = "block";
+        document.getElementById('error-photo').innerHTML = '<img class="error-icon" alt="" src="../img/error_invalid.png">Invalid file type (jpg, gif, png)';
+    } else {
+        if (file.size > 5000000) {
+            has_photo = false;
+            imageNotLoaded();
+            $('#photo').val('');
+            document.getElementById('error-photo').style.display = "block";
+            document.getElementById('error-photo').innerHTML = '<img class="error-icon" alt="" src="../img/error_invalid.png">Invalid file size. (Max: 5 MB)';
+        } else {
+            has_photo = true;
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(file);
+            //upload_photo()
+        }
+    }
+
+}
+function imageIsLoaded(e) {
+    $('#preview-photo').attr('src', e.target.result);
+}
+function imageNotLoaded() {
+    $('#preview-photo').attr('src', '../img/choose_image.png');
+}
+
+
+
+</script>
+
+{% endblock %}
